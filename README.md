@@ -1,6 +1,6 @@
 ## Run
 
-- Run `git clone `
+- Run `git clone git@github.com:victorhtl/bcrypt-sample.git`
 - Inside the cloned directory, run `npm i`
 - Create a config.js file with your database credentials like the model bellow
 

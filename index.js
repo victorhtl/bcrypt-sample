@@ -41,7 +41,7 @@ app.post('/signin', async (req, res)=>{
 
         if(!user) return res.status(400).send('User not exists') 
         
-        const isMatch = user.rows[0].password === req.body.password
+        const isMatch = req.body.password === user.rows[0].password
         
         isMatch ? 
             res.status(200).send('Authorized') : 
