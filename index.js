@@ -2,6 +2,7 @@ import express from 'express'
 import pg from 'pg'
 import {Config} from './config.js'
 import bodyParser from 'body-parser'
+import bcrypt from 'bcrypt'
 
 const {Pool} = pg
 const pool = new Pool(Config)
@@ -12,6 +13,8 @@ app.use(bodyParser.json())
 app.post('/signup', async (req, res)=>{
     const client = await pool.connect()
     const user = req.body
+
+    user.password = await bcrypt.hash(user.password, 10)
 
     const query = {
         text: 'INSERT INTO users(name, email, password, admin) VALUES($1, $2, $3, $4) RETURNING id',
@@ -41,7 +44,7 @@ app.post('/signin', async (req, res)=>{
 
         if(!user) return res.status(400).send('User not exists') 
         
-        const isMatch = req.body.password === user.rows[0].password
+        const isMatch = await bcrypt.compare(req.body.password, user.rows[0].password)
         
         isMatch ? 
             res.status(200).send('Authorized') : 
